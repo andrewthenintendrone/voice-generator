@@ -15,18 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Dictionary.cpp">
+    <ClCompile Include="source\Dictionary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Main.cpp">
+    <ClCompile Include="source\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Dictionary.h">
+    <ClInclude Include="source\Dictionary.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Header.h">
+    <ClInclude Include="source\Header.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,12 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Dictionary.cpp" />
-    <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="source\Dictionary.cpp" />
+    <ClCompile Include="source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Dictionary.h" />
-    <ClInclude Include="Source\Header.h" />
+    <ClInclude Include="source\Dictionary.h" />
+    <ClInclude Include="source\Header.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2EBF1B9F-51B8-4738-A817-5454D1F99823}</ProjectGuid>
