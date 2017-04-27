@@ -6,7 +6,7 @@ std::string soundStrings[39] = { "AA", "AE", "AH", "AO", "AW", "AY", "B", "CH", 
 // plays a wav file
 void play(int phoneme)
 {
-    std::string filename = "./rosen/" + soundStrings[phoneme] + ".wav";
+    std::string filename = "./resources/voices/andrew/" + soundStrings[phoneme] + ".wav";
     PlaySound(filename.c_str(), NULL, SND_SYNC | SND_FILENAME);
 }
 
