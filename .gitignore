@@ -8,7 +8,8 @@
 *.sln.docstates
 
 voice generator/resources/dictionary/extended dictionary.txt
-voice generator/resources/voices/rosen/
+voice generator/resources/voices/michaelrosen/
+voice generator/resources/voices/owenwilson/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
