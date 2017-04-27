@@ -7,6 +7,9 @@
 *.userosscache
 *.sln.docstates
 
+voice generator/resources/dictionary/extended dictionary.txt
+voice generator/resources/voices/rosen/
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
