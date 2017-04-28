@@ -7,9 +7,14 @@
 *.userosscache
 *.sln.docstates
 
+# personal extended dictionaries
 voice generator/resources/dictionary/extended dictionary.txt
+voice generator/resources/dictionary/pokemon.txt
+
+# personal voices
 voice generator/resources/voices/michaelrosen/
 voice generator/resources/voices/owenwilson/
+voice generator/resources/voices/gametheory/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

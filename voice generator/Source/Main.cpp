@@ -20,6 +20,12 @@ int main()
     std::vector<std::string> words;
     std::vector<std::vector<int>> phonemes;
 
+    // Intro
+    std::cout << "Voice Generator\n";
+
+    // tel the user how to exit
+    std::cout << "To exit the program type \"EXIT\"\n\n";
+
     // get words from user
     while (true)
     {
@@ -30,6 +36,12 @@ int main()
         // get line from user
         std::cout << "Enter a word or phrase: ";
         std::getline(std::cin, inputLine);
+
+        // escape loop and close program if user types "EXIT"
+        if (inputLine == "EXIT")
+        {
+            break;
+        }
 
         // convert line to upper case
         transform(inputLine.begin(), inputLine.end(), inputLine.begin(), ::toupper);

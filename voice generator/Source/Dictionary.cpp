@@ -19,10 +19,8 @@ void Dictionary::load()
 
     if (dictionaryFile.is_open())
     {
-        std::cout << "opened dictionary" << std::endl;
-
+        //std::cout << "opened dictionary" << std::endl;
         fill();
-
         dictionaryFile.close();
     }
     else
@@ -72,7 +70,7 @@ void Dictionary::fill()
         }
         entries.push_back(currentEntry);
     }
-    std::cout << "Loaded " << entries.size() << " words from dictionary" << std::endl;
+    //std::cout << "Loaded " << entries.size() << " words from dictionary" << std::endl;
 }
 
 // returns the phonemes for the given word
