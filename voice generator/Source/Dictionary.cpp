@@ -15,7 +15,7 @@ Dictionary::~Dictionary()
 // attempts to load dictionary file
 void Dictionary::load()
 {
-    dictionaryFile.open("./resources/dictionary/dictionary.txt", std::ios_base::in | std::ios_base::_Nocreate);
+    dictionaryFile.open("./resources/dictionary/extended dictionary.txt", std::ios_base::in | std::ios_base::_Nocreate);
 
     if (dictionaryFile.is_open())
     {
