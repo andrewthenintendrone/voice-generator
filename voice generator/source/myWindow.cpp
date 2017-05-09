@@ -1,8 +1,30 @@
-#include "Header.h"
-#include "Dictionary.h"
 #include "myWindow.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
+
+myWindow::myWindow()
+{
+    // append resource path to soundstrings
+    for (unsigned int i = 0; i < 39; i++)
+    {
+        m_soundStrings[i] = "./resources/voices/andrew/" + m_soundStrings[i] + ".wav";
+    }
+}
+
+// plays a wav file
+void myWindow::play(int phoneme)
+{
+    if (!m_buffer.loadFromFile(m_soundStrings[phoneme].c_str()))
+    {
+        return;
+    }
+    m_sound.setBuffer(m_buffer);
+    m_sound.play();
+    while (m_sound.getStatus() == sf::Sound::Playing)
+    {
+        // don't continue until the sound finishes
+    }
+}
 
 void myWindow::create(char appName[], char className[], RECT r)
 {
@@ -112,7 +134,37 @@ void myWindow::onLeftClickButton(HWND buttonID)
 {
     if (buttonID == m_button1)
     {
-        // add voice generation stuff here
+        // clear the previous data
+        m_words.clear();
+        m_phonemes.clear();
+        
+        // get input from text box
+        int bufferLength = GetWindowTextLength(m_textBox1) + 1;
+        m_inputLine.resize(bufferLength);
+        GetWindowText(m_textBox1, &m_inputLine[0], bufferLength);
+        m_inputLine.resize(bufferLength - 1);
+
+        // convert line to upper case
+        transform(m_inputLine.begin(), m_inputLine.end(), m_inputLine.begin(), toupper);
+
+        // parse line
+        std::istringstream ss(m_inputLine);
+        copy(std::istream_iterator<std::string>(ss), std::istream_iterator<std::string>(), std::back_inserter(m_words));
+
+        // get the phonemes for all the words
+        for (unsigned int currentPhoneme = 0; currentPhoneme < m_words.size(); currentPhoneme++)
+        {
+            m_phonemes.push_back(m_dictionary.getPhonemes(m_words[currentPhoneme]));
+        }
+
+        // play audio
+        for (unsigned int currentWord = 0; currentWord < m_words.size(); currentWord++)
+        {
+            for (unsigned int currentPhoneme = 0; currentPhoneme < m_phonemes[currentWord].size(); currentPhoneme++)
+            {
+                play(m_phonemes[currentWord][currentPhoneme]);
+            }
+        }
     }
 }
 
