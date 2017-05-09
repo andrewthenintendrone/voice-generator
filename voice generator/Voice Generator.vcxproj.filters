@@ -13,21 +13,42 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\window">
+      <UniqueIdentifier>{8c04b9a9-27f8-4ddf-b581-09118779be39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\voice">
+      <UniqueIdentifier>{606aa036-f4b6-4b57-84dc-52aee1a31cfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Dictionary.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\WinMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\myWindow.cpp">
+      <Filter>Source Files\window</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Window.cpp">
+      <Filter>Source Files\window</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Dictionary.cpp">
+      <Filter>Source Files\voice</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Dictionary.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\Header.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\myWindow.h">
+      <Filter>Source Files\window</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Window.h">
+      <Filter>Source Files\window</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Dictionary.h">
+      <Filter>Source Files\voice</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
