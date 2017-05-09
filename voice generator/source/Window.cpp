@@ -49,14 +49,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
         break;
     }
 
-    case WM_KEYDOWN:
-    {
-        if (wParam == VK_RETURN)
-        {
-            window->onPressEnter();
-        }
-    }
-
     case WM_SIZE:
     {
         if (window)
@@ -125,10 +117,24 @@ void Window::run()
 {
     MSG msg;
     ZeroMemory(&msg, sizeof(msg));
-    while (msg.message != WM_QUIT) {
-        if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE)) {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+    while (msg.message != WM_QUIT)
+    {
+        if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+        {
+            // check enter key before the edit box gets to it
+            if (msg.message == WM_KEYDOWN && msg.wParam == VK_RETURN)
+            {
+                onPressEnter();
+            }
+            else if (msg.message == WM_KEYDOWN && msg.wParam == VK_ESCAPE)
+            {
+                destroy();
+            }
+            else
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
         }
     }
 }

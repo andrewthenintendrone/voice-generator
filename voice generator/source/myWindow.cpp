@@ -46,7 +46,7 @@ void myWindow::processText()
     }
 
     // set focus back to button
-    SetFocus(m_button1);
+    //SetFocus(m_button1);
 }
 
 // plays a wav file
@@ -110,7 +110,7 @@ void myWindow::create(char appName[], char className[], RECT r)
         NULL,
         "EDIT",
         "",
-        WS_CHILD | WS_VISIBLE | ES_MULTILINE,
+        WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_WANTRETURN,
         20, 20,
         m_width - 40, m_height / 2 - 40,
         m_hwnd, NULL,
@@ -118,6 +118,8 @@ void myWindow::create(char appName[], char className[], RECT r)
         (LPVOID)this);
 
     Edit_SetCueBannerText(m_textBox1, L"Enter a word or phrase: ");
+    // set focus to edit box
+    SetFocus(m_textBox1);
 
     m_button1 = CreateWindowEx(
         NULL,
@@ -132,9 +134,6 @@ void myWindow::create(char appName[], char className[], RECT r)
         NULL,       // menu.
         m_wndclass.hInstance,
         (LPVOID)this);      // Pointer not needed.
-
-    // set focus to button
-    SetFocus(m_button1);
 
     m_loadBar1 = CreateWindowEx(
         NULL,
@@ -189,11 +188,7 @@ void myWindow::onResize()
     SetWindowPos(m_loadBar1, NULL, 20, m_clientRect.bottom - 40, m_width - 40, 20, SWP_NOZORDER);
 }
 
-
 void myWindow::onPressEnter()
 {
-    if ((HWND)GetFocus() == m_button1)
-    {
-        processText();
-    }
+    processText();
 }
