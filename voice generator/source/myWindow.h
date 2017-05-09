@@ -18,8 +18,11 @@ public:
     virtual void onLeftMouseButtonDown(int xPos, int yPos);
     virtual void onLeftClickButton(HWND buttonID);
     virtual void onResize();
+    virtual void onPressEnter();
 
+    void processText();
     void play(int phoneme);
+
 protected:
 private:
     HWND m_textBox1;

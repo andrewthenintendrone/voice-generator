@@ -11,6 +11,44 @@ myWindow::myWindow()
     }
 }
 
+void myWindow::processText()
+{
+    // clear the previous data
+    m_words.clear();
+    m_phonemes.clear();
+
+    // get input from text box
+    int bufferLength = GetWindowTextLength(m_textBox1) + 1;
+    m_inputLine.resize(bufferLength);
+    GetWindowText(m_textBox1, &m_inputLine[0], bufferLength);
+    m_inputLine.resize(bufferLength - 1);
+
+    // convert line to upper case
+    transform(m_inputLine.begin(), m_inputLine.end(), m_inputLine.begin(), toupper);
+
+    // parse line
+    std::istringstream ss(m_inputLine);
+    copy(std::istream_iterator<std::string>(ss), std::istream_iterator<std::string>(), std::back_inserter(m_words));
+
+    // get the phonemes for all the words
+    for (unsigned int currentPhoneme = 0; currentPhoneme < m_words.size(); currentPhoneme++)
+    {
+        m_phonemes.push_back(m_dictionary.getPhonemes(m_words[currentPhoneme]));
+    }
+
+    // play audio
+    for (unsigned int currentWord = 0; currentWord < m_words.size(); currentWord++)
+    {
+        for (unsigned int currentPhoneme = 0; currentPhoneme < m_phonemes[currentWord].size(); currentPhoneme++)
+        {
+            play(m_phonemes[currentWord][currentPhoneme]);
+        }
+    }
+
+    // set focus back to button
+    SetFocus(m_button1);
+}
+
 // plays a wav file
 void myWindow::play(int phoneme)
 {
@@ -72,7 +110,7 @@ void myWindow::create(char appName[], char className[], RECT r)
         NULL,
         "EDIT",
         "",
-        WS_CHILD | WS_VISIBLE,
+        WS_CHILD | WS_VISIBLE | ES_MULTILINE,
         20, 20,
         m_width - 40, m_height / 2 - 40,
         m_hwnd, NULL,
@@ -94,6 +132,9 @@ void myWindow::create(char appName[], char className[], RECT r)
         NULL,       // menu.
         m_wndclass.hInstance,
         (LPVOID)this);      // Pointer not needed.
+
+    // set focus to button
+    SetFocus(m_button1);
 
     m_loadBar1 = CreateWindowEx(
         NULL,
@@ -134,37 +175,7 @@ void myWindow::onLeftClickButton(HWND buttonID)
 {
     if (buttonID == m_button1)
     {
-        // clear the previous data
-        m_words.clear();
-        m_phonemes.clear();
-        
-        // get input from text box
-        int bufferLength = GetWindowTextLength(m_textBox1) + 1;
-        m_inputLine.resize(bufferLength);
-        GetWindowText(m_textBox1, &m_inputLine[0], bufferLength);
-        m_inputLine.resize(bufferLength - 1);
-
-        // convert line to upper case
-        transform(m_inputLine.begin(), m_inputLine.end(), m_inputLine.begin(), toupper);
-
-        // parse line
-        std::istringstream ss(m_inputLine);
-        copy(std::istream_iterator<std::string>(ss), std::istream_iterator<std::string>(), std::back_inserter(m_words));
-
-        // get the phonemes for all the words
-        for (unsigned int currentPhoneme = 0; currentPhoneme < m_words.size(); currentPhoneme++)
-        {
-            m_phonemes.push_back(m_dictionary.getPhonemes(m_words[currentPhoneme]));
-        }
-
-        // play audio
-        for (unsigned int currentWord = 0; currentWord < m_words.size(); currentWord++)
-        {
-            for (unsigned int currentPhoneme = 0; currentPhoneme < m_phonemes[currentWord].size(); currentPhoneme++)
-            {
-                play(m_phonemes[currentWord][currentPhoneme]);
-            }
-        }
+        processText();
     }
 }
 
@@ -176,4 +187,13 @@ void myWindow::onResize()
     SetWindowPos(m_textBox1, NULL, 20, 20, m_width - 40, m_height / 2 - 40, SWP_NOZORDER);
     SetWindowPos(m_button1, NULL, 20, m_height / 2 + 20, m_width - 40, m_height / 2 - 80, SWP_NOZORDER);
     SetWindowPos(m_loadBar1, NULL, 20, m_clientRect.bottom - 40, m_width - 40, 20, SWP_NOZORDER);
+}
+
+
+void myWindow::onPressEnter()
+{
+    if ((HWND)GetFocus() == m_button1)
+    {
+        processText();
+    }
 }

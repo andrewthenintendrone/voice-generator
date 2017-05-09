@@ -25,6 +25,7 @@ class Window
         virtual void onLeftMouseButtonDown(int xPos, int yPos) {};
         virtual void onLeftClickButton(HWND buttonID) {};
         virtual void onResize() {};
+        virtual void onPressEnter() {};
 
         HWND getHWND();
 
