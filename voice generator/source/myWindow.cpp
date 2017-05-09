@@ -1,3 +1,5 @@
+#include "Header.h"
+#include "Dictionary.h"
 #include "myWindow.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
@@ -55,12 +57,12 @@ void myWindow::create(char appName[], char className[], RECT r)
         m_wndclass.hInstance,
         (LPVOID)this);
 
-    Edit_SetCueBannerText(m_textBox1, L"Please enter your credit card information");
+    Edit_SetCueBannerText(m_textBox1, L"Enter a word or phrase: ");
 
     m_button1 = CreateWindowEx(
         NULL,
         "BUTTON",  // Predefined class; Unicode assumed 
-        "SEND TO THE NIGERIAN PRINCE",      // Button text 
+        "Say it",      // Button text 
         WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
         20,         // x position 
         m_height / 2 + 20,         // y position 
@@ -110,12 +112,7 @@ void myWindow::onLeftClickButton(HWND buttonID)
 {
     if (buttonID == m_button1)
     {
-        if (MessageBox(m_hwnd, "ARE YOU SURE YOU WANT TO SEND MONEY TO THE NIGERIAN PRINCE?", "CRITICAL WARNING!", MB_YESNO | MB_ICONSTOP | MB_DEFBUTTON2) == IDYES)
-        {
-            Edit_SetText(m_textBox1, (LPSTR)"");
-            SendMessage(m_button1, WM_SETTEXT, 0, (LPARAM)(LPSTR)"YOU ARE AN IDIOT");
-            SendMessage(m_loadBar1, PBM_DELTAPOS, 100, 0);
-        }
+        // add voice generation stuff here
     }
 }
 
