@@ -5,6 +5,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 
 myWindow::myWindow()
 {
+    // seed RNG
+    unsigned int seed = (unsigned int)std::chrono::system_clock::now().time_since_epoch().count();
+    m_RNG = std::default_random_engine(seed);
+
     // append resource path to soundstrings
     for (unsigned int i = 0; i < 39; i++)
     {
@@ -67,6 +71,8 @@ void myWindow::play(int phoneme)
 
 void myWindow::create(char appName[], char className[], RECT r)
 {
+    std::uniform_int_distribution<int> range(0, 255);
+
     HINSTANCE hinst = GetModuleHandle(NULL);
 
     /*  Fill in WNDCLASSEX struct members  */
@@ -79,7 +85,7 @@ void myWindow::create(char appName[], char className[], RECT r)
     m_wndclass.hIcon = LoadIcon(hinst, MAKEINTRESOURCE(MIC_ICON));
     m_wndclass.hIconSm = LoadIcon(hinst, MAKEINTRESOURCE(MIC_ICON));
     m_wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-    m_wndclass.hbrBackground = CreateSolidBrush(RGB(30, 30, 30));
+    m_wndclass.hbrBackground = CreateSolidBrush(RGB(range(m_RNG), range(m_RNG), range(m_RNG))); // randomly color window
     m_wndclass.lpszClassName = className;
     m_wndclass.lpszMenuName = NULL;
 

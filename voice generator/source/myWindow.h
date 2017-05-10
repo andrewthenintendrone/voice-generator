@@ -3,6 +3,8 @@
 #include "Dictionary.h"
 #include <SFML\Audio.hpp>
 #include "Window.h"
+#include <random>
+#include <chrono>
 
 class myWindow : public Window
 {
@@ -39,6 +41,8 @@ private:
     std::string m_inputLine;
     std::vector<std::string> m_words;
     std::vector<std::vector<int>> m_phonemes;
+
+    std::default_random_engine m_RNG;
 
     Dictionary m_dictionary;
 };
