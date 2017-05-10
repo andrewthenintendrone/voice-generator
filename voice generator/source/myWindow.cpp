@@ -1,4 +1,5 @@
 #include "myWindow.h"
+#include "../resources/resource.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 
@@ -75,8 +76,8 @@ void myWindow::create(char appName[], char className[], RECT r)
     m_wndclass.cbClsExtra = 0;
     m_wndclass.cbWndExtra = sizeof(void*);
     m_wndclass.hInstance = hinst;
-    m_wndclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-    m_wndclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+    m_wndclass.hIcon = LoadIcon(hinst, MAKEINTRESOURCE(MIC_ICON));
+    m_wndclass.hIconSm = LoadIcon(hinst, MAKEINTRESOURCE(MIC_ICON));
     m_wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
     m_wndclass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
     m_wndclass.lpszClassName = className;

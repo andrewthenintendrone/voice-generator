@@ -26,10 +26,17 @@
     <ClCompile Include="source\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resources\resource.h" />
     <ClInclude Include="source\Dictionary.h" />
     <ClInclude Include="source\Header.h" />
     <ClInclude Include="source\myWindow.h" />
     <ClInclude Include="source\Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\MIC_ICON.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources\Voice Generator.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{34A19090-560C-4A0A-AE27-9E263EA17C51}</ProjectGuid>
