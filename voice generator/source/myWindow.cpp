@@ -46,8 +46,8 @@ void myWindow::processText()
         }
     }
 
-    // set focus back to button
-    //SetFocus(m_button1);
+    // set focus back to text box
+    SetFocus(m_textBox1);
 }
 
 // plays a wav file
@@ -79,7 +79,7 @@ void myWindow::create(char appName[], char className[], RECT r)
     m_wndclass.hIcon = LoadIcon(hinst, MAKEINTRESOURCE(MIC_ICON));
     m_wndclass.hIconSm = LoadIcon(hinst, MAKEINTRESOURCE(MIC_ICON));
     m_wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-    m_wndclass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+    m_wndclass.hbrBackground = CreateSolidBrush(RGB(30, 30, 30));
     m_wndclass.lpszClassName = className;
     m_wndclass.lpszMenuName = NULL;
 
@@ -98,10 +98,6 @@ void myWindow::create(char appName[], char className[], RECT r)
         m_wndclass.hInstance,
         (LPVOID)this);
 
-    // color window
-    HBRUSH brush = CreateSolidBrush(RGB(30, 30, 30));
-    SetClassLongPtr(m_hwnd, GCLP_HBRBACKGROUND, (LONG)brush);
-
     // store size of client rect along with width and height
     GetClientRect(m_hwnd, &m_clientRect);
     m_width = m_clientRect.right - m_clientRect.left;
@@ -119,7 +115,8 @@ void myWindow::create(char appName[], char className[], RECT r)
         (LPVOID)this);
 
     Edit_SetCueBannerText(m_textBox1, L"Enter a word or phrase: ");
-    // set focus to edit box
+
+    // set focus to text box
     SetFocus(m_textBox1);
 
     m_button1 = CreateWindowEx(
