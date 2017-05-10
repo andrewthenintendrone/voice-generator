@@ -109,18 +109,27 @@ void myWindow::create(char appName[], char className[], RECT r)
     m_width = m_clientRect.right - m_clientRect.left;
     m_height = m_clientRect.bottom - m_clientRect.top;
 
+    // create text box
     m_textBox1 = CreateWindowEx(
         NULL,
         "EDIT",
         "",
-        WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_WANTRETURN,
+        WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_WANTRETURN | ES_AUTOVSCROLL | WM_VSCROLL,
         20, 20,
         m_width - 40, m_height / 2 - 40,
         m_hwnd, NULL,
         m_wndclass.hInstance,
         (LPVOID)this);
 
-    Edit_SetCueBannerText(m_textBox1, L"Enter a word or phrase: ");
+    EnableScrollBar(m_textBox1, SB_VERT, ESB_ENABLE_BOTH);
+    ShowScrollBar(m_textBox1, SB_VERT, ESB_ENABLE_BOTH);
+
+    // add cue text
+    //Edit_SetCueBannerText(m_textBox1, L"Enter a word or phrase: ");
+
+    // set margins
+    RECT margins = { 10, 10, m_width - 50, m_height / 2 - 50 };
+    SendMessage(m_textBox1, EM_SETRECT, 0, (LPARAM)&margins);
 
     // set focus to text box
     SetFocus(m_textBox1);
