@@ -114,22 +114,17 @@ void myWindow::create(char appName[], char className[], RECT r)
         NULL,
         "EDIT",
         "",
-        WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_WANTRETURN | ES_AUTOVSCROLL | WM_VSCROLL,
+        WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_WANTRETURN | WS_VSCROLL | ES_AUTOVSCROLL,
         20, 20,
         m_width - 40, m_height / 2 - 40,
         m_hwnd, NULL,
         m_wndclass.hInstance,
         (LPVOID)this);
 
-    EnableScrollBar(m_textBox1, SB_VERT, ESB_ENABLE_BOTH);
-    ShowScrollBar(m_textBox1, SB_VERT, ESB_ENABLE_BOTH);
-
     // add cue text
     //Edit_SetCueBannerText(m_textBox1, L"Enter a word or phrase: ");
 
-    // set margins
-    RECT margins = { 10, 10, m_width - 50, m_height / 2 - 50 };
-    SendMessage(m_textBox1, EM_SETRECT, 0, (LPARAM)&margins);
+    EnableScrollBar(m_textBox1, SB_VERT, ESB_ENABLE_BOTH);
 
     // set focus to text box
     SetFocus(m_textBox1);
@@ -193,12 +188,22 @@ void myWindow::onLeftClickButton(HWND buttonID)
 
 void myWindow::onResize()
 {
+    // resize all windows
     GetClientRect(m_hwnd, &m_clientRect);
     m_width = m_clientRect.right - m_clientRect.left;
     m_height = m_clientRect.bottom - m_clientRect.top;
     SetWindowPos(m_textBox1, NULL, 20, 20, m_width - 40, m_height / 2 - 40, SWP_NOZORDER);
     SetWindowPos(m_button1, NULL, 20, m_height / 2 + 20, m_width - 40, m_height / 2 - 80, SWP_NOZORDER);
     SetWindowPos(m_loadBar1, NULL, 20, m_clientRect.bottom - 40, m_width - 40, 20, SWP_NOZORDER);
+
+    // set text box margins
+    RECT margins;
+    GetClientRect(m_hwnd, &margins);
+    margins.left += 10;
+    //margins.right -= 10;
+    margins.top += 10;
+    margins.bottom -= 10;
+    SendMessage(m_textBox1, EM_SETRECT, 0, (LPARAM)&margins);
 }
 
 void myWindow::onPressEnter()
