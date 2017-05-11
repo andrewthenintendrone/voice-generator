@@ -41,8 +41,7 @@ void myWindow::processText()
         m_phonemes.push_back(m_dictionary.getPhonemes(m_words[currentPhoneme]));
     }
 
-    m_audioThread = std::thread(&myWindow::play, this);
-    m_audioThread.detach();
+    play();
 
     // set focus back to text box
     SetFocus(m_textBox1);
@@ -66,10 +65,6 @@ void myWindow::play()
                 }
             }
         }
-    }
-    if (m_audioThread.joinable())
-    {
-        m_audioThread.join();
     }
 }
 
@@ -176,11 +171,6 @@ void myWindow::onCreate()
 
 void myWindow::onDestroy()
 {
-    while (!m_audioThread.joinable())
-    {
-
-    }
-    m_audioThread.join();
     PostQuitMessage(0);
 }
 
@@ -214,9 +204,9 @@ void myWindow::onResize()
 
     // set text box margins
     RECT margins;
-    GetClientRect(m_hwnd, &margins);
+    GetClientRect(m_textBox1, &margins);
     margins.left += 10;
-    //margins.right -= 10;
+    margins.right -= 10;
     margins.top += 10;
     margins.bottom -= 10;
     SendMessage(m_textBox1, EM_SETRECT, 0, (LPARAM)&margins);
