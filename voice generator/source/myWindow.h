@@ -24,10 +24,11 @@ public:
     virtual void onPressEnter();
 
     void processText();
-    void play(int phoneme);
+    void play();
 
 protected:
 private:
+    bool running;
     HWND m_textBox1;
     HWND m_button1;
     HWND m_loadBar1;
@@ -38,6 +39,7 @@ private:
     std::string m_soundStrings[39] = { "AA", "AE", "AH", "AO", "AW", "AY", "B", "CH", "D", "DH", "EH", "ER", "EY", "F", "G", "HH", "IH", "IY", "JH", "K", "L", "M", "N", "NG", "OW", "OY", "P", "R", "S", "SH", "T", "TH", "UH", "UW", "V", "W", "Y", "Z", "ZH" };
     sf::SoundBuffer m_buffer;
     sf::Sound m_sound;
+    std::thread m_audioThread;
 
     std::string m_inputLine;
     std::vector<std::string> m_words;

@@ -41,31 +41,35 @@ void myWindow::processText()
         m_phonemes.push_back(m_dictionary.getPhonemes(m_words[currentPhoneme]));
     }
 
-    // play audio
-    for (unsigned int currentWord = 0; currentWord < m_words.size(); currentWord++)
-    {
-        for (unsigned int currentPhoneme = 0; currentPhoneme < m_phonemes[currentWord].size(); currentPhoneme++)
-        {
-            play(m_phonemes[currentWord][currentPhoneme]);
-        }
-    }
+    m_audioThread = std::thread(&myWindow::play, this);
+    m_audioThread.detach();
 
     // set focus back to text box
     SetFocus(m_textBox1);
 }
 
 // plays a wav file
-void myWindow::play(int phoneme)
+void myWindow::play()
 {
-    if (!m_buffer.loadFromFile(m_soundStrings[phoneme].c_str()))
+    // play audio
+    for (unsigned int currentWord = 0; currentWord < m_words.size(); currentWord++)
     {
-        return;
+        for (unsigned int currentPhoneme = 0; currentPhoneme < m_phonemes[currentWord].size(); currentPhoneme++)
+        {
+            if (m_buffer.loadFromFile(m_soundStrings[m_phonemes[currentWord][currentPhoneme]].c_str()))
+            {
+                m_sound.setBuffer(m_buffer);
+                m_sound.play();
+                while (m_sound.getStatus() == sf::Sound::Playing)
+                {
+
+                }
+            }
+        }
     }
-    m_sound.setBuffer(m_buffer);
-    m_sound.play();
-    while (m_sound.getStatus() == sf::Sound::Playing)
+    if (m_audioThread.joinable())
     {
-        // don't continue until the sound finishes
+        m_audioThread.join();
     }
 }
 
@@ -172,7 +176,12 @@ void myWindow::onCreate()
 
 void myWindow::onDestroy()
 {
+    while (!m_audioThread.joinable())
+    {
 
+    }
+    m_audioThread.join();
+    PostQuitMessage(0);
 }
 
 void myWindow::onPaint()

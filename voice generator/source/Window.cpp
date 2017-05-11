@@ -146,7 +146,7 @@ void Window::run()
 
 void Window::destroy()
 {
-    PostQuitMessage(0);
+    onDestroy();
 }
 
 HWND Window::getHWND()
