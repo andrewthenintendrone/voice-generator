@@ -13,6 +13,7 @@ public:
     ~myWindow() {};
 
     void create(char appName[], char className[], RECT r);
+    void show();
 
     virtual void onCreate();
     virtual void onDestroy();

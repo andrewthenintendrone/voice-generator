@@ -3,18 +3,24 @@
 // sets up when loaded
 Dictionary::Dictionary()
 {
-    load();
+
 }
 
 // closes dictionary file when destroyed
 Dictionary::~Dictionary()
 {
-    dictionaryFile.close();
+    if (dictionaryFile)
+    {
+        dictionaryFile.close();
+    }
 }
 
 // attempts to load dictionary file
-void Dictionary::load()
+void Dictionary::load(HWND loadBar)
 {
+    // store loadBar
+    m_loadBar = loadBar;
+
     dictionaryFile.open("./resources/dictionary/dictionary.txt", std::ios_base::in | std::ios_base::_Nocreate);
 
     if (dictionaryFile.is_open())
@@ -37,6 +43,23 @@ void Dictionary::fill()
 
     std::string currentLine;
     int currentWordLength = 0;
+
+    unsigned int numEntries = 0;
+
+    while (std::getline(dictionaryFile, currentLine))
+    {
+        // if the line is not a comment
+        if (currentLine.substr(0, 3) != ";;;")
+        {
+            numEntries++;
+        }
+    }
+
+    SendMessage(m_loadBar, PBM_SETRANGE32, 0, numEntries);
+    SendMessage(m_loadBar, PBM_SETSTEP, 1, 0);
+
+    dictionaryFile.clear();
+    dictionaryFile.seekg(0, std::ios::beg);
 
     // read every line of the file
     while (std::getline(dictionaryFile, currentLine))
@@ -67,8 +90,10 @@ void Dictionary::fill()
                     }
                 }
             }
+            entries.push_back(currentEntry);
+            SendMessage(m_loadBar, PBM_STEPIT, 0, 0);
+            Sleep(0);
         }
-        entries.push_back(currentEntry);
     }
     //std::cout << "Loaded " << entries.size() << " words from dictionary" << std::endl;
 }

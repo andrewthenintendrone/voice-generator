@@ -16,6 +16,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
         break;
     }
 
+    case WM_CREATE:
+    {
+        window->onCreate();
+    }
+
     case WM_PAINT:
     {
         /*  We receive WM_PAINT every time window is updated  */

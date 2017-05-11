@@ -154,13 +154,20 @@ void myWindow::create(char appName[], char className[], RECT r)
         NULL,
         m_wndclass.hInstance,
         (LPVOID)this);
-
     //SendMessage(m_loadBar1, PBM_SETPOS, 100, 0);
+}
+
+/*  Show and update our window  */
+void myWindow::show()
+{
+    ShowWindow(m_hwnd, SW_NORMAL);
+    UpdateWindow(m_hwnd);
+    m_dictionary.load(m_loadBar1);
 }
 
 void myWindow::onCreate()
 {
-
+    
 }
 
 void myWindow::onDestroy()

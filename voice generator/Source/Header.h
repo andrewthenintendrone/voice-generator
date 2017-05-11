@@ -2,6 +2,7 @@
 #pragma comment( lib, "winmm" ) 
 
 #include <Windows.h>
+#include <CommCtrl.h>
 #include <mmsystem.h>
 #include <iostream>
 #include <fstream>
