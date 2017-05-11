@@ -44,18 +44,15 @@ void Dictionary::fill()
     std::string currentLine;
     int currentWordLength = 0;
 
-    unsigned int numEntries = 0;
+    unsigned int numLines = 0;
+    dictionaryFile.unsetf(std::ios_base::skipws);
 
     while (std::getline(dictionaryFile, currentLine))
     {
-        // if the line is not a comment
-        if (currentLine.substr(0, 3) != ";;;")
-        {
-            numEntries++;
-        }
+        numLines++;
     }
 
-    SendMessage(m_loadBar, PBM_SETRANGE32, 0, numEntries);
+    SendMessage(m_loadBar, PBM_SETRANGE32, 0, numLines);
     SendMessage(m_loadBar, PBM_SETSTEP, 1, 0);
 
     dictionaryFile.clear();
@@ -91,9 +88,9 @@ void Dictionary::fill()
                 }
             }
             entries.push_back(currentEntry);
-            SendMessage(m_loadBar, PBM_STEPIT, 0, 0);
-            Sleep(0);
         }
+        SendMessage(m_loadBar, PBM_STEPIT, 0, 0);
+        Sleep(0);
     }
     //std::cout << "Loaded " << entries.size() << " words from dictionary" << std::endl;
 }
