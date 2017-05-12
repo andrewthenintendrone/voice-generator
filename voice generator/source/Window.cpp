@@ -76,40 +76,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
     return DefWindowProc(hwnd, iMsg, wParam, lParam);
 }
 
-void Window::create(char appName[], char className[], RECT r)
-{
-    HINSTANCE hinst = GetModuleHandle(NULL);
-
-    /*  Fill in WNDCLASSEX struct members  */
-    m_wndclass.cbSize = sizeof(m_wndclass);
-    m_wndclass.style = CS_HREDRAW | CS_VREDRAW;
-    m_wndclass.lpfnWndProc = WndProc;
-    m_wndclass.cbClsExtra = 0;
-    m_wndclass.cbWndExtra = sizeof(void*);
-    m_wndclass.hInstance = hinst;
-    m_wndclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-    m_wndclass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
-    m_wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-    m_wndclass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-    m_wndclass.lpszClassName = className;
-    m_wndclass.lpszMenuName = NULL;
-
-    /*  Register a new window class with Windows  */
-    if (!RegisterClassEx(&m_wndclass)) return;
-
-    /*  Create a window based on our new class  */
-    m_hwnd = CreateWindowEx(
-        WS_EX_OVERLAPPEDWINDOW,
-        className,
-        appName,
-        WS_OVERLAPPEDWINDOW | WS_THICKFRAME | WS_MAXIMIZEBOX,
-        r.left, r.top,
-        r.right - r.left, r.bottom - r.top,
-        NULL, NULL,
-        m_wndclass.hInstance,
-        (LPVOID)this);
-}
-
 /*  Show and update our window  */
 void Window::show()
 {

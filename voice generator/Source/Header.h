@@ -3,6 +3,7 @@
 
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <thread>
 #include <mmsystem.h>
 #include <iostream>
 #include <fstream>

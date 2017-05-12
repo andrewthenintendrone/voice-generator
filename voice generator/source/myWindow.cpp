@@ -14,6 +14,7 @@ myWindow::myWindow()
     {
         m_soundStrings[i] = "./resources/voices/andrew/" + m_soundStrings[i] + ".wav";
     }
+    m_audioPlaying = false;
 }
 
 void myWindow::processText()
@@ -41,15 +42,17 @@ void myWindow::processText()
         m_phonemes.push_back(m_dictionary.getPhonemes(m_words[currentPhoneme]));
     }
 
-    play();
+    m_audioThread = std::thread(&myWindow::play, this);
+    m_audioThread.detach();
 
     // set focus back to text box
     SetFocus(m_textBox1);
 }
 
-// plays a wav file
+// plays phonemes
 void myWindow::play()
 {
+    m_audioPlaying = true;
     // play audio
     for (unsigned int currentWord = 0; currentWord < m_words.size(); currentWord++)
     {
@@ -61,11 +64,15 @@ void myWindow::play()
                 m_sound.play();
                 while (m_sound.getStatus() == sf::Sound::Playing)
                 {
-
+                    if (!m_audioPlaying)
+                    {
+                        return;
+                    }
                 }
             }
         }
     }
+    m_audioPlaying = false;
 }
 
 void myWindow::create(char appName[], char className[], RECT r)
@@ -171,6 +178,7 @@ void myWindow::onCreate()
 
 void myWindow::onDestroy()
 {
+    m_audioPlaying = false;
     PostQuitMessage(0);
 }
 
@@ -186,7 +194,7 @@ void myWindow::onLeftMouseButtonDown(int xPos, int yPos)
 
 void myWindow::onLeftClickButton(HWND buttonID)
 {
-    if (buttonID == m_button1)
+    if (buttonID == m_button1 && !m_audioPlaying)
     {
         processText();
     }
@@ -214,5 +222,8 @@ void myWindow::onResize()
 
 void myWindow::onPressEnter()
 {
-    processText();
+    if (!m_audioPlaying)
+    {
+        processText();
+    }
 }

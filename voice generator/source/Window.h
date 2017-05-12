@@ -14,7 +14,7 @@ class Window
         Window() {};
         virtual ~Window() = 0 {};
 
-        void create(char appName[], char className[], RECT r);
+        virtual void create(char appName[], char className[], RECT r) = 0;
         void show();
         void run();
         void destroy();

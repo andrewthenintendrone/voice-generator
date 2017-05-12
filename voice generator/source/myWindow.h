@@ -28,7 +28,6 @@ public:
 
 protected:
 private:
-    bool running;
     HWND m_textBox1;
     HWND m_button1;
     HWND m_loadBar1;
@@ -37,8 +36,10 @@ private:
     int m_height;
 
     std::string m_soundStrings[39] = { "AA", "AE", "AH", "AO", "AW", "AY", "B", "CH", "D", "DH", "EH", "ER", "EY", "F", "G", "HH", "IH", "IY", "JH", "K", "L", "M", "N", "NG", "OW", "OY", "P", "R", "S", "SH", "T", "TH", "UH", "UW", "V", "W", "Y", "Z", "ZH" };
+    std::thread m_audioThread;
     sf::SoundBuffer m_buffer;
     sf::Sound m_sound;
+    bool m_audioPlaying;
 
     std::string m_inputLine;
     std::vector<std::string> m_words;
