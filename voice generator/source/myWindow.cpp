@@ -77,9 +77,11 @@ void myWindow::play()
 
 void myWindow::create(char appName[], char className[], RECT r)
 {
-    std::uniform_int_distribution<int> range(0, 255);
-
     HINSTANCE hinst = GetModuleHandle(NULL);
+
+    std::uniform_int_distribution<int> range(0, 255);
+    m_randomColor = RGB(range(m_RNG), range(m_RNG), range(m_RNG));
+    LoadIcon(hinst, MAKEINTRESOURCE(APPLICATION_ICON));
 
     /*  Fill in WNDCLASSEX struct members  */
     m_wndclass.cbSize = sizeof(m_wndclass);
@@ -88,10 +90,10 @@ void myWindow::create(char appName[], char className[], RECT r)
     m_wndclass.cbClsExtra = 0;
     m_wndclass.cbWndExtra = sizeof(void*);
     m_wndclass.hInstance = hinst;
-    m_wndclass.hIcon = LoadIcon(hinst, MAKEINTRESOURCE(MIC_ICON));
-    m_wndclass.hIconSm = LoadIcon(hinst, MAKEINTRESOURCE(MIC_ICON));
+    m_wndclass.hIcon = createColoredIcon(m_randomColor);
+    m_wndclass.hIconSm = createColoredIcon(m_randomColor);
     m_wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-    m_wndclass.hbrBackground = CreateSolidBrush(RGB(range(m_RNG), range(m_RNG), range(m_RNG))); // randomly color window
+    m_wndclass.hbrBackground = CreateSolidBrush(m_randomColor); // randomly color window
     m_wndclass.lpszClassName = className;
     m_wndclass.lpszMenuName = NULL;
 
@@ -226,4 +228,67 @@ void myWindow::onClose()
 {
     m_audioPlaying = false;
     PostQuitMessage(0);
+}
+
+HICON myWindow::createColoredIcon(COLORREF iconColor)
+{
+    // get the application icon
+    HICON appIcon = LoadIcon(m_wndclass.hInstance, MAKEINTRESOURCE(APPLICATION_ICON));
+
+    // get info about the application icon
+    ICONINFO appIconInfo;
+    GetIconInfo(appIcon, &appIconInfo);
+
+    // store icon mask in a bitmap
+    BITMAP iconMask;
+    GetObject(appIconInfo.hbmMask, sizeof(iconMask), &iconMask);
+
+    // get width and height
+    int width = iconMask.bmWidth;
+    int height = iconMask.bmHeight;
+
+    // Obtain a handle to the screen device context.
+    HDC hdcScreen = GetDC(NULL);
+
+    // Create a memory device context, which we will draw into.
+    HDC hdcMem = CreateCompatibleDC(hdcScreen);
+
+    // Create the bitmap, and select it into the device context for drawing.
+    HBITMAP hbmp = CreateCompatibleBitmap(hdcScreen, width, height);
+    HBITMAP hbmpOld = (HBITMAP)SelectObject(hdcMem, hbmp);
+
+    // Draw your icon.
+    // 
+    // For this simple example, we're just drawing a solid color rectangle
+    // in the specified color with the specified dimensions.
+    HPEN hpen = CreatePen(PS_SOLID, 1, iconColor);
+    HPEN hpenOld = (HPEN)SelectObject(hdcMem, hpen);
+    HBRUSH hbrush = CreateSolidBrush(iconColor);
+    HBRUSH hbrushOld = (HBRUSH)SelectObject(hdcMem, hbrush);
+    Rectangle(hdcMem, 0, 0, width, height);
+    SelectObject(hdcMem, hbrushOld);
+    SelectObject(hdcMem, hpenOld);
+    DeleteObject(hbrush);
+    DeleteObject(hpen);
+
+    // Create an icon from the bitmap.
+    // 
+    // Icons require masks to indicate transparent and opaque areas. Since this
+    // simple example has no transparent areas, we use a fully opaque mask.
+    HBITMAP hbmpMask = CreateCompatibleBitmap(hdcScreen, width, height);
+    ICONINFO ii;
+    ii.fIcon = TRUE;
+    ii.hbmMask = appIconInfo.hbmMask;
+    ii.hbmColor = hbmp;
+    HICON hIcon = CreateIconIndirect(&ii);
+    DeleteObject(hbmpMask);
+
+    // Clean-up.
+    SelectObject(hdcMem, hbmpOld);
+    DeleteObject(hbmp);
+    DeleteDC(hdcMem);
+    ReleaseDC(NULL, hdcScreen);
+
+    // Return the icon.
+    return hIcon;
 }

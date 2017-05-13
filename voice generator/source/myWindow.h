@@ -35,6 +35,10 @@ private:
     int m_width;
     int m_height;
 
+    COLORREF m_randomColor;
+    HICON m_applicationIcon;
+    HICON createColoredIcon(COLORREF iconColor);
+
     std::string m_soundStrings[39] = { "AA", "AE", "AH", "AO", "AW", "AY", "B", "CH", "D", "DH", "EH", "ER", "EY", "F", "G", "HH", "IH", "IY", "JH", "K", "L", "M", "N", "NG", "OW", "OY", "P", "R", "S", "SH", "T", "TH", "UH", "UW", "V", "W", "Y", "Z", "ZH" };
     std::thread m_audioThread;
     sf::SoundBuffer m_buffer;
