@@ -4,74 +4,82 @@
 /*  Window procedure  */
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
-    Window* window = (Window*)GetWindowLong(hwnd, 0);
+    Window* window = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
     /*  Switch according to what type of message we have received  */
     switch (iMsg)
     {
-    case WM_NCCREATE:
-    {
-        CREATESTRUCT* cs = (CREATESTRUCT*)lParam;
-        SetWindowLong(hwnd, 0, (LONG)cs->lpCreateParams);
-        break;
-    }
-
-    case WM_CREATE:
-    {
-        window->onCreate();
-    }
-
-    case WM_PAINT:
-    {
-        /*  We receive WM_PAINT every time window is updated  */
-        if (window)
+        /*  WM_CREATE is the first message recieved from windows  */
+        case WM_NCCREATE:
         {
-            window->onPaint();
+            LPCREATESTRUCT lpcs = reinterpret_cast<LPCREATESTRUCT>(lParam);
+            window = static_cast<Window*>(lpcs->lpCreateParams);
+            SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
+            break;
         }
-        break;
-    }
 
-    case WM_LBUTTONDOWN:
-    {
-
-        if (window)
+        case WM_CREATE:
         {
-            window->onLeftMouseButtonDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-        }
-        break;
-    }
-
-    case WM_COMMAND:
-    {
-        if (window)
-        {
-            // left click
-            if (((HWND)lParam) && (HIWORD(wParam) == BN_CLICKED))
+            if (window)
             {
-                window->onLeftClickButton((HWND)lParam);
+                window->onCreate();
             }
+            break;
         }
-        break;
-    }
 
-    case WM_SIZE:
-    {
-        if (window)
+        /*  We receive WM_PAINT every time window is updated  */
+        case WM_PAINT:
         {
-            window->onResize();
+            if (window)
+            {
+                window->onPaint();
+            }
+            break;
         }
-        break;
-    }
 
-    case WM_DESTROY:
-        /*  Window has been destroyed, so exit cleanly  */
-        if (window)
+        /*  WM_LBUTTONDOWN is recieved when the left mouse button is pressed  */
+        case WM_LBUTTONDOWN:
         {
-            window->destroy();
+            if (window)
+            {
+                window->onLeftMouseButtonDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+            }
+            break;
         }
-        return 0;
-    }
 
+        /*  WM_COMMAND is recieved whenever the user interacts with the window  */
+        case WM_COMMAND:
+        {
+            if (window)
+            {
+                // a button has been clicked
+                if (((HWND)lParam) && (HIWORD(wParam) == BN_CLICKED))
+                {
+                    window->onLeftClickButton((HWND)lParam);
+                }
+            }
+            break;
+        }
+
+        /*  WM_SIZE is recieved whenever the window is resized  */
+        case WM_SIZE:
+        {
+            if (window)
+            {
+                window->onResize();
+            }
+            break;
+        }
+
+        case WM_CLOSE:
+        {
+            if (window)
+            {
+                window->onClose();
+            }
+            break;
+        }
+    }
     /*  Send any messages we don't handle to default window procedure  */
     return DefWindowProc(hwnd, iMsg, wParam, lParam);
 }
@@ -92,14 +100,13 @@ void Window::run()
     {
         if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
         {
-            // check enter key before the edit box gets to it
             if (msg.message == WM_KEYDOWN && msg.wParam == VK_RETURN)
             {
                 onPressEnter();
             }
             else if (msg.message == WM_KEYDOWN && msg.wParam == VK_ESCAPE)
             {
-                destroy();
+                onClose();
             }
             else
             {
@@ -110,9 +117,14 @@ void Window::run()
     }
 }
 
-void Window::destroy()
+void Window::onClose()
 {
-    onDestroy();
+    // are you sure? etc.
+    /*if (MessageBox(m_hwnd, "Save changes to untitled?", "Save?", MB_YESNOCANCEL | MB_ICONEXCLAMATION | MB_DEFBUTTON1) != IDCANCEL)
+    {*/
+        PostQuitMessage(0);
+        return;
+    //}
 }
 
 HWND Window::getHWND()

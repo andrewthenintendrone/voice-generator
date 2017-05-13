@@ -11,25 +11,24 @@
 class Window
 {
     public:
-        Window() {};
-        virtual ~Window() = 0 {};
-
-        virtual void create(char appName[], char className[], RECT r) = 0;
+        virtual void create(char appName[], char className[], RECT r) = 0 {};
         void show();
         void run();
-        void destroy();
 
         virtual void onCreate() {};
-        virtual void onDestroy() {};
         virtual void onPaint() {};
         virtual void onLeftMouseButtonDown(int xPos, int yPos) {};
         virtual void onLeftClickButton(HWND buttonID) {};
         virtual void onResize() {};
         virtual void onPressEnter() {};
+        virtual void onClose();
 
         HWND getHWND();
 
     protected:
+        Window() {};
+        virtual ~Window() = 0 {};
+
         HWND m_hwnd;
         WNDCLASSEX  m_wndclass;
     private:

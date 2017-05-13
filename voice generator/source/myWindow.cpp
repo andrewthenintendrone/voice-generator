@@ -176,12 +176,6 @@ void myWindow::onCreate()
     
 }
 
-void myWindow::onDestroy()
-{
-    m_audioPlaying = false;
-    PostQuitMessage(0);
-}
-
 void myWindow::onPaint()
 {
 
@@ -226,4 +220,10 @@ void myWindow::onPressEnter()
     {
         processText();
     }
+}
+
+void myWindow::onClose()
+{
+    m_audioPlaying = false;
+    PostQuitMessage(0);
 }
