@@ -39,7 +39,7 @@ void Dictionary::load(HWND loadBar)
 // fills in entries
 void Dictionary::fill()
 {
-    Entry currentEntry;
+    std::vector<int> currentEntry;
 
     std::string currentLine;
     int currentWordLength = 0;
@@ -65,11 +65,12 @@ void Dictionary::fill()
         if (currentLine.substr(0, 3) != ";;;")
         {
             // clear the last entry
-            currentEntry.phonemes.clear();
+            currentEntry.clear();
 
             // store the word
             currentWordLength = currentLine.find("  ");
-            currentEntry.word = currentLine.substr(0, currentWordLength);
+            std::string word = currentLine.substr(0, currentWordLength);
+            //currentEntry.word = currentLine.substr(0, currentWordLength);
 
             // add a space to stop overflows
             currentLine += " ";
@@ -81,34 +82,16 @@ void Dictionary::fill()
                 {
                     if (currentSlice == checkStrings[soundIndex])
                     {
-                        currentEntry.phonemes.push_back(soundIndex);
+                        currentEntry.push_back(soundIndex);
                         soundIndex = 39;
                         currentChar++;
                     }
                 }
             }
-            entries.push_back(currentEntry);
+            entries[word] = currentEntry;
         }
         SendMessage(m_loadBar, PBM_STEPIT, 0, 0);
         Sleep(0);
     }
     //std::cout << "Loaded " << entries.size() << " words from dictionary" << std::endl;
-}
-
-// returns the phonemes for the given word
-std::vector<int> Dictionary::getPhonemes(std::string word)
-{
-    std::string currentLine;
-
-    // get the right line
-    for (unsigned int entryIndex = 0; entryIndex < entries.size(); entryIndex++)
-    {
-        if (entries[entryIndex].word == word)
-        {
-            return entries[entryIndex].phonemes;
-        }
-    }
-
-    std::vector<int> phonemes;
-    return phonemes;
 }

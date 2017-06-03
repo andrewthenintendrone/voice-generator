@@ -39,7 +39,7 @@ void myWindow::processText()
     // get the phonemes for all the words
     for (unsigned int currentPhoneme = 0; currentPhoneme < m_words.size(); currentPhoneme++)
     {
-        m_phonemes.push_back(m_dictionary.getPhonemes(m_words[currentPhoneme]));
+        m_phonemes.push_back(m_dictionary.entries[(m_words[currentPhoneme])]);
     }
 
     m_audioThread = std::thread(&myWindow::play, this);

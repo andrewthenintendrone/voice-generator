@@ -1,12 +1,6 @@
 #pragma once
 #include "Header.h"
-
-class Entry
-{
-public:
-    std::string word;
-    std::vector<int> phonemes;
-};
+#include <unordered_map>
 
 // the dictionary contains entries for every word
 class Dictionary
@@ -17,9 +11,8 @@ public:
 
     void load(HWND loadBar);
 
-    std::vector<Entry> entries;
-
-    std::vector<int> getPhonemes(const std::string words);
+    //HashTable<std::vector<int>> entries = HashTable<std::vector<int>>(200000);
+    std::unordered_map<std::string, std::vector<int>>entries;
 private:
     HWND m_loadBar;
 

@@ -78,7 +78,7 @@ int main()
         // get the phonemes for all the words
         for (unsigned int currentPhoneme = 0; currentPhoneme < words.size(); currentPhoneme++)
         {
-            phonemes.push_back(dictionary.getPhonemes(words[currentPhoneme]));
+            phonemes.push_back(dictionary.entries[(words[currentPhoneme])]);
         }
 
         // play audio
