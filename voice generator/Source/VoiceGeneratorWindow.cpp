@@ -1,23 +1,28 @@
-#include "myWindow.h"
+#include "VoiceGeneratorWindow.h"
 #include "../resources/resource.h"
+#include <random>
+#include <chrono>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 
-myWindow::myWindow()
+// constructor
+VoiceGeneratorWindow::VoiceGeneratorWindow()
 {
     // seed RNG
     unsigned int seed = (unsigned int)std::chrono::system_clock::now().time_since_epoch().count();
-    m_RNG = std::default_random_engine(seed);
+    //m_RNG = std::default_random_engine(seed);
+	srand(seed);
 
     // append resource path to soundstrings
     for (unsigned int i = 0; i < 39; i++)
     {
-        m_soundStrings[i] = "./resources/voices/andrew/" + m_soundStrings[i] + ".wav";
+        m_soundStrings[i] = "./resources/voices/michaelrosen/" + m_soundStrings[i] + ".wav";
     }
     m_audioPlaying = false;
 }
 
-void myWindow::processText()
+// process the text in the text box
+void VoiceGeneratorWindow::processText()
 {
     // clear the previous data
     m_words.clear();
@@ -42,15 +47,15 @@ void myWindow::processText()
         m_phonemes.push_back(m_dictionary.entries[(m_words[currentPhoneme])]);
     }
 
-    m_audioThread = std::thread(&myWindow::play, this);
+    m_audioThread = std::thread(&VoiceGeneratorWindow::play, this);
     m_audioThread.detach();
 
     // set focus back to text box
     SetFocus(m_textBox1);
 }
 
-// plays phonemes
-void myWindow::play()
+// play phoneme sound effects
+void VoiceGeneratorWindow::play()
 {
     m_audioPlaying = true;
     // play audio
@@ -75,12 +80,13 @@ void myWindow::play()
     m_audioPlaying = false;
 }
 
-void myWindow::create(char appName[], char className[], RECT r)
+// 
+void VoiceGeneratorWindow::create(char appName[], char className[], RECT r)
 {
     HINSTANCE hinst = GetModuleHandle(NULL);
 
     std::uniform_int_distribution<int> range(0, 255);
-    m_randomColor = RGB(range(m_RNG), range(m_RNG), range(m_RNG));
+    m_randomColor = RGB(rand() % 256, rand() % 256, rand() % 256);
     LoadIcon(hinst, MAKEINTRESOURCE(APPLICATION_ICON));
 
     /*  Fill in WNDCLASSEX struct members  */
@@ -166,29 +172,33 @@ void myWindow::create(char appName[], char className[], RECT r)
 }
 
 /*  Show and update our window  */
-void myWindow::show()
+void VoiceGeneratorWindow::show()
 {
     ShowWindow(m_hwnd, SW_NORMAL);
     UpdateWindow(m_hwnd);
     m_dictionary.load(m_loadBar1);
 }
 
-void myWindow::onCreate()
+// called after the window is created
+void VoiceGeneratorWindow::onCreate()
 {
     
 }
 
-void myWindow::onPaint()
+// called when the window is being painted
+void VoiceGeneratorWindow::onPaint()
 {
 
 }
 
-void myWindow::onLeftMouseButtonDown(int xPos, int yPos)
+// called when the left mouse button is held down
+void VoiceGeneratorWindow::onLeftMouseButtonDown(int xPos, int yPos)
 {
 
 }
 
-void myWindow::onLeftClickButton(HWND buttonID)
+// called when a button recieves a left mouse click
+void VoiceGeneratorWindow::onLeftClickButton(HWND buttonID)
 {
     if (buttonID == m_button1 && !m_audioPlaying)
     {
@@ -196,7 +206,8 @@ void myWindow::onLeftClickButton(HWND buttonID)
     }
 }
 
-void myWindow::onResize()
+// called when the window is resized
+void VoiceGeneratorWindow::onResize()
 {
     // resize all windows
     GetClientRect(m_hwnd, &m_clientRect);
@@ -216,7 +227,8 @@ void myWindow::onResize()
     SendMessage(m_textBox1, EM_SETRECT, 0, (LPARAM)&margins);
 }
 
-void myWindow::onPressEnter()
+// called when the enter key is pressed
+void VoiceGeneratorWindow::onPressEnter()
 {
     if (!m_audioPlaying)
     {
@@ -224,13 +236,21 @@ void myWindow::onPressEnter()
     }
 }
 
-void myWindow::onClose()
+// called when the escape key is pressed
+void VoiceGeneratorWindow::onPressEscape()
+{
+	// call onClose
+	onClose();
+}
+
+// called when the window is closed
+void VoiceGeneratorWindow::onClose()
 {
     m_audioPlaying = false;
     PostQuitMessage(0);
 }
 
-HICON myWindow::createColoredIcon(COLORREF iconColor)
+HICON VoiceGeneratorWindow::createColoredIcon(COLORREF iconColor)
 {
     // get the application icon
     HICON appIcon = LoadIcon(m_wndclass.hInstance, MAKEINTRESOURCE(APPLICATION_ICON));

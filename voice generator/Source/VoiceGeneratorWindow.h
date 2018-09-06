@@ -3,14 +3,13 @@
 #include "Dictionary.h"
 #include <SFML\Audio.hpp>
 #include "Window.h"
-#include <random>
-#include <chrono>
 
-class myWindow : public Window
+class VoiceGeneratorWindow : public Window
 {
 public:
-    myWindow();
-    ~myWindow() {};
+
+	VoiceGeneratorWindow();
+    ~VoiceGeneratorWindow() {};
 
     void create(char appName[], char className[], RECT r);
     void show();
@@ -21,13 +20,14 @@ public:
     virtual void onLeftClickButton(HWND buttonID);
     virtual void onResize();
     virtual void onPressEnter();
+	virtual void onPressEscape();
     virtual void onClose();
 
     void processText();
     void play();
 
-protected:
 private:
+
     HWND m_textBox1;
     HWND m_button1;
     HWND m_loadBar1;
@@ -48,8 +48,6 @@ private:
     std::string m_inputLine;
     std::vector<std::string> m_words;
     std::vector<std::vector<int>> m_phonemes;
-
-    std::default_random_engine m_RNG;
 
     Dictionary m_dictionary;
 };
