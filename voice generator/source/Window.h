@@ -28,6 +28,7 @@ class Window
 		HWND getHWND() { return m_hwnd; }
 
     protected:
+
         Window() {};
         virtual ~Window() = 0 {};
 

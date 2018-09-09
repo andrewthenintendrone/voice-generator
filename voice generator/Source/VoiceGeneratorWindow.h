@@ -31,7 +31,7 @@ private:
     HWND m_textBox1;
     HWND m_button1;
     HWND m_loadBar1;
-    RECT m_clientRect;;
+    RECT m_clientRect;
     int m_width;
     int m_height;
 
@@ -43,7 +43,7 @@ private:
     std::thread m_audioThread;
     sf::SoundBuffer m_buffer;
     sf::Sound m_sound;
-    bool m_audioPlaying;
+    bool m_audioPlaying = false;
 
     std::string m_inputLine;
     std::vector<std::string> m_words;

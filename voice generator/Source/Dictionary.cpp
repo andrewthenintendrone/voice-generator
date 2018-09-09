@@ -25,7 +25,6 @@ void Dictionary::load(HWND loadBar)
 
     if (dictionaryFile.is_open())
     {
-        //std::cout << "opened dictionary" << std::endl;
         fill();
         dictionaryFile.close();
     }
@@ -70,7 +69,6 @@ void Dictionary::fill()
             // store the word
             currentWordLength = currentLine.find("  ");
             std::string word = currentLine.substr(0, currentWordLength);
-            //currentEntry.word = currentLine.substr(0, currentWordLength);
 
             // add a space to stop overflows
             currentLine += " ";
@@ -91,7 +89,5 @@ void Dictionary::fill()
             entries[word] = currentEntry;
         }
         SendMessage(m_loadBar, PBM_STEPIT, 0, 0);
-        Sleep(0);
     }
-    //std::cout << "Loaded " << entries.size() << " words from dictionary" << std::endl;
 }

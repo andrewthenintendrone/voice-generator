@@ -9,33 +9,31 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 VoiceGeneratorWindow::VoiceGeneratorWindow()
 {
     // seed RNG
-    unsigned int seed = (unsigned int)std::chrono::system_clock::now().time_since_epoch().count();
-    //m_RNG = std::default_random_engine(seed);
-	srand(seed);
+	srand(std::chrono::system_clock::now().time_since_epoch().count());
 
     // append resource path to soundstrings
-    for (unsigned int i = 0; i < 39; i++)
+    for (size_t i = 0; i < 39; i++)
     {
         m_soundStrings[i] = "./resources/voices/michaelrosen/" + m_soundStrings[i] + ".wav";
     }
-    m_audioPlaying = false;
 }
 
 // process the text in the text box
 void VoiceGeneratorWindow::processText()
 {
-    // clear the previous data
+    // clear the previous word and phoneme data
     m_words.clear();
     m_phonemes.clear();
 
     // get input from text box
     int bufferLength = GetWindowTextLength(m_textBox1) + 1;
+	m_inputLine.clear();
     m_inputLine.resize(bufferLength);
     GetWindowText(m_textBox1, &m_inputLine[0], bufferLength);
     m_inputLine.resize(bufferLength - 1);
 
     // convert line to upper case
-    transform(m_inputLine.begin(), m_inputLine.end(), m_inputLine.begin(), toupper);
+    std::transform(m_inputLine.begin(), m_inputLine.end(), m_inputLine.begin(), toupper);
 
     // parse line
     std::istringstream ss(m_inputLine);
@@ -80,33 +78,33 @@ void VoiceGeneratorWindow::play()
     m_audioPlaying = false;
 }
 
-// 
+// create the voice generator window layout
 void VoiceGeneratorWindow::create(char appName[], char className[], RECT r)
 {
     HINSTANCE hinst = GetModuleHandle(NULL);
 
-    std::uniform_int_distribution<int> range(0, 255);
+	// generate a random color and load the application icon
     m_randomColor = RGB(rand() % 256, rand() % 256, rand() % 256);
     LoadIcon(hinst, MAKEINTRESOURCE(APPLICATION_ICON));
 
-    /*  Fill in WNDCLASSEX struct members  */
+    // Fill in WNDCLASSEX struct members
     m_wndclass.cbSize = sizeof(m_wndclass);
     m_wndclass.style = CS_HREDRAW | CS_VREDRAW;
-    m_wndclass.lpfnWndProc = WndProc;
+    m_wndclass.lpfnWndProc = WndProc; // WndProc function
     m_wndclass.cbClsExtra = 0;
     m_wndclass.cbWndExtra = sizeof(void*);
     m_wndclass.hInstance = hinst;
-    m_wndclass.hIcon = createColoredIcon(m_randomColor);
-    m_wndclass.hIconSm = createColoredIcon(m_randomColor);
+    m_wndclass.hIcon = createColoredIcon(m_randomColor); // color the icon using the random color
+    m_wndclass.hIconSm = m_wndclass.hIcon;
     m_wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-    m_wndclass.hbrBackground = CreateSolidBrush(m_randomColor); // randomly color window
+    m_wndclass.hbrBackground = CreateSolidBrush(m_randomColor); // use the same random color for the window
     m_wndclass.lpszClassName = className;
     m_wndclass.lpszMenuName = NULL;
 
-    /*  Register a new window class with Windows  */
+    // Register a new window class with Windows
     if (!RegisterClassEx(&m_wndclass)) return;
 
-    /*  Create a window based on our new class  */
+    // Create a window based on our new class
     m_hwnd = CreateWindowEx(
         WS_EX_OVERLAPPEDWINDOW,
         className,
@@ -135,14 +133,11 @@ void VoiceGeneratorWindow::create(char appName[], char className[], RECT r)
         m_wndclass.hInstance,
         (LPVOID)this);
 
-    // add cue text
-    //Edit_SetCueBannerText(m_textBox1, L"Enter a word or phrase: ");
-
+	// enable scroll bar and set focus to text box
     EnableScrollBar(m_textBox1, SB_VERT, ESB_ENABLE_BOTH);
-
-    // set focus to text box
     SetFocus(m_textBox1);
 
+	// create button
     m_button1 = CreateWindowEx(
         NULL,
         "BUTTON",  // Predefined class; Unicode assumed 
@@ -157,6 +152,7 @@ void VoiceGeneratorWindow::create(char appName[], char className[], RECT r)
         m_wndclass.hInstance,
         (LPVOID)this);      // Pointer not needed.
 
+	// create loading bar
     m_loadBar1 = CreateWindowEx(
         NULL,
         PROGRESS_CLASS,
@@ -168,6 +164,7 @@ void VoiceGeneratorWindow::create(char appName[], char className[], RECT r)
         NULL,
         m_wndclass.hInstance,
         (LPVOID)this);
+	SendMessage(m_loadBar1, PBM_SETBARCOLOR, 0, m_randomColor);
     //SendMessage(m_loadBar1, PBM_SETPOS, 100, 0);
 }
 
