@@ -14,68 +14,8 @@ VoiceGeneratorWindow::VoiceGeneratorWindow()
     // append resource path to soundstrings
     for (size_t i = 0; i < 39; i++)
     {
-        m_soundStrings[i] = "./resources/voices/michaelrosen/" + m_soundStrings[i] + ".wav";
+        m_soundStrings[i] = "./resources/voices/andrew/" + m_soundStrings[i] + ".wav";
     }
-}
-
-// process the text in the text box
-void VoiceGeneratorWindow::processText()
-{
-    // clear the previous word and phoneme data
-    m_words.clear();
-    m_phonemes.clear();
-
-    // get input from text box
-    int bufferLength = GetWindowTextLength(m_textBox1) + 1;
-	m_inputLine.clear();
-    m_inputLine.resize(bufferLength);
-    GetWindowText(m_textBox1, &m_inputLine[0], bufferLength);
-    m_inputLine.resize(bufferLength - 1);
-
-    // convert line to upper case
-    std::transform(m_inputLine.begin(), m_inputLine.end(), m_inputLine.begin(), toupper);
-
-    // parse line
-    std::istringstream ss(m_inputLine);
-    copy(std::istream_iterator<std::string>(ss), std::istream_iterator<std::string>(), std::back_inserter(m_words));
-
-    // get the phonemes for all the words
-    for (unsigned int currentPhoneme = 0; currentPhoneme < m_words.size(); currentPhoneme++)
-    {
-        m_phonemes.push_back(m_dictionary.entries[(m_words[currentPhoneme])]);
-    }
-
-    m_audioThread = std::thread(&VoiceGeneratorWindow::play, this);
-    m_audioThread.detach();
-
-    // set focus back to text box
-    SetFocus(m_textBox1);
-}
-
-// play phoneme sound effects
-void VoiceGeneratorWindow::play()
-{
-    m_audioPlaying = true;
-    // play audio
-    for (unsigned int currentWord = 0; currentWord < m_words.size(); currentWord++)
-    {
-        for (unsigned int currentPhoneme = 0; currentPhoneme < m_phonemes[currentWord].size(); currentPhoneme++)
-        {
-            if (m_buffer.loadFromFile(m_soundStrings[m_phonemes[currentWord][currentPhoneme]].c_str()))
-            {
-                m_sound.setBuffer(m_buffer);
-                m_sound.play();
-                while (m_sound.getStatus() == sf::Sound::Playing)
-                {
-                    if (!m_audioPlaying)
-                    {
-                        return;
-                    }
-                }
-            }
-        }
-    }
-    m_audioPlaying = false;
 }
 
 // create the voice generator window layout
@@ -245,6 +185,66 @@ void VoiceGeneratorWindow::onClose()
 {
     m_audioPlaying = false;
     PostQuitMessage(0);
+}
+
+// process the text in the text box
+void VoiceGeneratorWindow::processText()
+{
+	// clear the previous word and phoneme data
+	m_words.clear();
+	m_phonemes.clear();
+
+	// get input from text box
+	int bufferLength = GetWindowTextLength(m_textBox1) + 1;
+	m_inputLine.clear();
+	m_inputLine.resize(bufferLength);
+	GetWindowText(m_textBox1, &m_inputLine[0], bufferLength);
+	m_inputLine.resize(bufferLength - 1);
+
+	// convert line to upper case
+	std::transform(m_inputLine.begin(), m_inputLine.end(), m_inputLine.begin(), toupper);
+
+	// parse line
+	std::istringstream ss(m_inputLine);
+	copy(std::istream_iterator<std::string>(ss), std::istream_iterator<std::string>(), std::back_inserter(m_words));
+
+	// get the phonemes for all the words
+	for (unsigned int currentPhoneme = 0; currentPhoneme < m_words.size(); currentPhoneme++)
+	{
+		m_phonemes.push_back(m_dictionary.entries[(m_words[currentPhoneme])]);
+	}
+
+	m_audioThread = std::thread(&VoiceGeneratorWindow::play, this);
+	m_audioThread.detach();
+
+	// set focus back to text box
+	SetFocus(m_textBox1);
+}
+
+// play phoneme sound effects
+void VoiceGeneratorWindow::play()
+{
+	m_audioPlaying = true;
+	// play audio
+	for (unsigned int currentWord = 0; currentWord < m_words.size(); currentWord++)
+	{
+		for (unsigned int currentPhoneme = 0; currentPhoneme < m_phonemes[currentWord].size(); currentPhoneme++)
+		{
+			if (m_buffer.loadFromFile(m_soundStrings[m_phonemes[currentWord][currentPhoneme]].c_str()))
+			{
+				m_sound.setBuffer(m_buffer);
+				m_sound.play();
+				while (m_sound.getStatus() == sf::Sound::Playing)
+				{
+					if (!m_audioPlaying)
+					{
+						return;
+					}
+				}
+			}
+		}
+	}
+	m_audioPlaying = false;
 }
 
 HICON VoiceGeneratorWindow::createColoredIcon(COLORREF iconColor)
